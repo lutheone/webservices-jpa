@@ -1,6 +1,7 @@
 package com.lutheone.webservices.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lutheone.webservices.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -8,6 +9,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_order")
@@ -27,6 +30,9 @@ public class Order implements Serializable {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Order() {
     }
@@ -78,6 +84,10 @@ public class Order implements Serializable {
 
         Order order = (Order) o;
         return getId().equals(order.getId());
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
     }
 
     @Override
