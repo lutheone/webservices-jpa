@@ -35,13 +35,19 @@ public class UserResource {
     public ResponseEntity<User> insert(@RequestBody User obj) {
         obj = service.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-            .buildAndExpand(obj.getId()).toUri();
+                .buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<User> delete(@PathVariable Long id) {
         User obj = service.delete(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+        obj = service.update(id, obj);
         return ResponseEntity.ok().body(obj);
     }
 }
