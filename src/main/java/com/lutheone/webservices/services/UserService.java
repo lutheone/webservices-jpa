@@ -2,9 +2,11 @@ package com.lutheone.webservices.services;
 
 import com.lutheone.webservices.entities.User;
 import com.lutheone.webservices.repositories.UserRepository;
-
+import com.lutheone.webservices.services.exeptions.DatabaseException;
 import com.lutheone.webservices.services.exeptions.ResourceNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,10 +32,16 @@ public class UserService {
         return repository.save(obj);
     }
 
-    public User delete(Long id) {
-        Optional<User> obj = repository.findById(id);
-        repository.deleteById(id);
-        return obj.get();
+    public void delete(Long id) {
+        try {
+            if (!repository.existsById(id)) {
+                throw new ResourceNotFoundException(id);
+            }
+            repository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User obj) {
