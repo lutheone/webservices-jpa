@@ -1,7 +1,6 @@
 package com.lutheone.webservices.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lutheone.webservices.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -91,6 +90,14 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Double getTotal() {
+        double sum = 0.0;
+        for (OrderItem t : items) {
+            sum += t.getSubTotal();
+        }
+        return sum;
     }
 
     @Override
